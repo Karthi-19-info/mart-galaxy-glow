@@ -112,14 +112,48 @@ function ProductDetail() {
             {stockStatus(product)} · SKU {product.sku}
           </p>
 
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="glass flex items-center gap-1 rounded-xl p-1" role="group" aria-label="Quantity">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="size-9"
+                aria-label="Decrease quantity"
+                disabled={qty <= 1 || maxAddable === 0}
+                onClick={() => bump(-1)}
+              >
+                <Minus className="size-3.5" />
+              </Button>
+              <span aria-live="polite" className="w-9 text-center text-sm font-semibold">
+                {qty}
+              </span>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="size-9"
+                aria-label="Increase quantity"
+                disabled={qty >= maxAddable}
+                onClick={() => bump(1)}
+              >
+                <Plus className="size-3.5" />
+              </Button>
+            </div>
+            {inCart > 0 && (
+              <p className="text-xs text-muted-foreground">{inCart} already in cart</p>
+            )}
+          </div>
+
           <div className="flex flex-wrap gap-3">
             <Button
               size="lg"
               className="bg-gradient-brand text-primary-foreground shadow-glow hover:opacity-90"
-              onClick={() => addToCart(product.id)}
+              onClick={() => handleAdd()}
               disabled={product.stock === 0}
             >
               <ShoppingCart className="size-4" /> Add to cart
+            </Button>
+            <Button size="lg" variant="secondary" onClick={() => handleAdd(true)} disabled={product.stock === 0}>
+              Buy now
             </Button>
             <Button size="lg" variant="outline" onClick={() => toggleWishlist(product.id)}>
               <Heart className="size-4" /> {wished ? "In wishlist" : "Wishlist"}
