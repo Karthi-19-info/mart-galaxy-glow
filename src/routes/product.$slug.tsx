@@ -61,9 +61,42 @@ function ProductNotFound() {
 
 function ProductDetail() {
   const { product } = Route.useLoaderData() as { product: Product };
-  const { addToCart, toggleWishlist, wishlist } = useShop();
+  const { addToCart, toggleWishlist, wishlist, cart } = useShop();
+  const navigate = useNavigate();
   const wished = wishlist.includes(product.id);
   const reviews = reviewsForProduct(product.id);
+
+  const inCart = cart.find((l) => l.productId === product.id)?.qty ?? 0;
+  const maxAddable = Math.max(product.stock - inCart, 0);
+  const [qty, setQty] = useState(1);
+
+  const bump = (delta: number) => {
+    setQty((q) => Math.min(Math.max(q + delta, 1), Math.max(maxAddable, 1)));
+  };
+
+  const handleAdd = (buyNow = false) => {
+    if (product.stock === 0) {
+      toast.error("Out of stock", { description: `${product.name} is currently unavailable.` });
+      return;
+    }
+    if (maxAddable === 0) {
+      toast.error("Stock limit reached", {
+        description: `All ${product.stock} available units are already in your cart.`,
+      });
+      return;
+    }
+    if (qty > maxAddable) {
+      toast.error("Not enough stock", {
+        description: `You can add only ${maxAddable} more of this item.`,
+      });
+      setQty(maxAddable);
+      return;
+    }
+    addToCart(product.id, qty);
+    setQty(1);
+    if (buyNow) void navigate({ to: "/cart" });
+  };
+
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6">
