@@ -1,5 +1,7 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Heart, ShoppingCart } from "lucide-react";
+import { useState } from "react";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { Heart, Minus, Plus, ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProductGallery } from "@/components/shop/ProductGallery";
@@ -59,9 +61,42 @@ function ProductNotFound() {
 
 function ProductDetail() {
   const { product } = Route.useLoaderData() as { product: Product };
-  const { addToCart, toggleWishlist, wishlist } = useShop();
+  const { addToCart, toggleWishlist, wishlist, cart } = useShop();
+  const navigate = useNavigate();
   const wished = wishlist.includes(product.id);
   const reviews = reviewsForProduct(product.id);
+
+  const inCart = cart.find((l) => l.productId === product.id)?.qty ?? 0;
+  const maxAddable = Math.max(product.stock - inCart, 0);
+  const [qty, setQty] = useState(1);
+
+  const bump = (delta: number) => {
+    setQty((q) => Math.min(Math.max(q + delta, 1), Math.max(maxAddable, 1)));
+  };
+
+  const handleAdd = (buyNow = false) => {
+    if (product.stock === 0) {
+      toast.error("Out of stock", { description: `${product.name} is currently unavailable.` });
+      return;
+    }
+    if (maxAddable === 0) {
+      toast.error("Stock limit reached", {
+        description: `All ${product.stock} available units are already in your cart.`,
+      });
+      return;
+    }
+    if (qty > maxAddable) {
+      toast.error("Not enough stock", {
+        description: `You can add only ${maxAddable} more of this item.`,
+      });
+      setQty(maxAddable);
+      return;
+    }
+    addToCart(product.id, qty);
+    setQty(1);
+    if (buyNow) void navigate({ to: "/cart" });
+  };
+
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6">
@@ -77,14 +112,48 @@ function ProductDetail() {
             {stockStatus(product)} · SKU {product.sku}
           </p>
 
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="glass flex items-center gap-1 rounded-xl p-1" role="group" aria-label="Quantity">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="size-9"
+                aria-label="Decrease quantity"
+                disabled={qty <= 1 || maxAddable === 0}
+                onClick={() => bump(-1)}
+              >
+                <Minus className="size-3.5" />
+              </Button>
+              <span aria-live="polite" className="w-9 text-center text-sm font-semibold">
+                {qty}
+              </span>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="size-9"
+                aria-label="Increase quantity"
+                disabled={qty >= maxAddable}
+                onClick={() => bump(1)}
+              >
+                <Plus className="size-3.5" />
+              </Button>
+            </div>
+            {inCart > 0 && (
+              <p className="text-xs text-muted-foreground">{inCart} already in cart</p>
+            )}
+          </div>
+
           <div className="flex flex-wrap gap-3">
             <Button
               size="lg"
               className="bg-gradient-brand text-primary-foreground shadow-glow hover:opacity-90"
-              onClick={() => addToCart(product.id)}
+              onClick={() => handleAdd()}
               disabled={product.stock === 0}
             >
               <ShoppingCart className="size-4" /> Add to cart
+            </Button>
+            <Button size="lg" variant="secondary" onClick={() => handleAdd(true)} disabled={product.stock === 0}>
+              Buy now
             </Button>
             <Button size="lg" variant="outline" onClick={() => toggleWishlist(product.id)}>
               <Heart className="size-4" /> {wished ? "In wishlist" : "Wishlist"}
