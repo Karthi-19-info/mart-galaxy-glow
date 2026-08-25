@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/layout/SectionHeading";
 
-type CompanySearch = { topic?: string };
+type CompanySearch = { topic?: string | undefined };
 
 const topics: Record<string, { title: string; body: string[] }> = {
   about: {
@@ -57,7 +57,7 @@ export const Route = createFileRoute("/company")({
 
 function CompanyPage() {
   const { topic } = Route.useSearch();
-  const active = (topic && topics[topic]) ?? topics["about"]!;
+  const active = topics[topic ?? ""] ?? topics["about"]!;
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6">

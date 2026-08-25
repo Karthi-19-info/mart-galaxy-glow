@@ -8,7 +8,7 @@ import { orders } from "@/data/catalog";
 import { formatDate, inr } from "@/lib/format";
 import { useShop } from "@/lib/shop-store";
 
-type AccountSearch = { tab?: string };
+type AccountSearch = { tab?: string | undefined };
 
 export const Route = createFileRoute("/account")({
   validateSearch: (search: Record<string, unknown>): AccountSearch => ({

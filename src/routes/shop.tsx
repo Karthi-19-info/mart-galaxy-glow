@@ -41,10 +41,10 @@ const sortLabels: Record<SortKey, string> = {
 const PAGE_SIZE = 12;
 
 export type ShopSearch = {
-  q?: string;
-  category?: string;
-  sort?: SortKey;
-  page?: number;
+  q?: string | undefined;
+  category?: string | undefined;
+  sort?: SortKey | undefined;
+  page?: number | undefined;
 };
 
 export const Route = createFileRoute("/shop")({
@@ -96,7 +96,7 @@ function ShopPage() {
 
   const patch = (p: Partial<ShopFilters>) => {
     setFilters((f) => ({ ...f, ...p }));
-    navigate({ search: (prev) => ({ ...prev, page: 1, category: undefined }) });
+    navigate({ search: (prev) => ({ q: prev.q, sort: prev.sort, page: 1 }) });
   };
 
   const filtered = useMemo(() => {
