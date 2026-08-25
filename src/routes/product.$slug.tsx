@@ -2,7 +2,8 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Heart, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ProductImage } from "@/components/shop/ProductImage";
+import { ProductGallery } from "@/components/shop/ProductGallery";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RatingStars } from "@/components/shop/RatingStars";
 import { PriceDisplay } from "@/components/shop/PriceDisplay";
 import { ProductGrid } from "@/components/shop/ProductGrid";
@@ -65,14 +66,13 @@ function ProductDetail() {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6">
       <div className="grid gap-8 lg:grid-cols-2">
-        <ProductImage product={product} className="aspect-square w-full" iconClassName="size-16" />
+        <ProductGallery product={product} />
 
         <div className="space-y-5">
           <p className="text-xs font-semibold uppercase tracking-wider text-primary">{product.brand}</p>
           <h1 className="font-display text-3xl font-bold leading-tight">{product.name}</h1>
           <RatingStars rating={product.rating} reviewCount={product.reviewCount} />
           <PriceDisplay price={product.price} mrp={product.mrp} />
-          <p className="text-sm text-muted-foreground">{product.description}</p>
           <p className="text-sm font-medium">
             {stockStatus(product)} · SKU {product.sku}
           </p>
@@ -93,33 +93,53 @@ function ProductDetail() {
 
           <Separator />
 
-          <dl className="grid gap-2 sm:grid-cols-2">
-            {product.specs.map((s) => (
-              <div key={s.label} className="glass rounded-xl p-3">
-                <dt className="text-xs text-muted-foreground">{s.label}</dt>
-                <dd className="text-sm font-medium">{s.value}</dd>
-              </div>
-            ))}
-          </dl>
+          <Tabs defaultValue="description">
+            <TabsList className="w-full">
+              <TabsTrigger value="description" className="flex-1">
+                Description
+              </TabsTrigger>
+              <TabsTrigger value="specs" className="flex-1">
+                Specifications
+              </TabsTrigger>
+              <TabsTrigger value="reviews" className="flex-1">
+                Reviews ({reviews.length})
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="description" className="glass mt-4 rounded-2xl p-4">
+              <p className="text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+            </TabsContent>
+
+            <TabsContent value="specs" className="mt-4">
+              <dl className="grid gap-2 sm:grid-cols-2">
+                {product.specs.map((s) => (
+                  <div key={s.label} className="glass rounded-xl p-3">
+                    <dt className="text-xs text-muted-foreground">{s.label}</dt>
+                    <dd className="text-sm font-medium">{s.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </TabsContent>
+
+            <TabsContent value="reviews" className="mt-4 space-y-3">
+              {reviews.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No reviews yet for this product.</p>
+              ) : (
+                reviews.map((r) => (
+                  <article key={r.id} className="glass rounded-2xl p-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold">{r.author}</h3>
+                      <RatingStars rating={r.rating} />
+                    </div>
+                    <p className="mt-2 text-sm text-muted-foreground">{r.body}</p>
+                  </article>
+                ))
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
 
-      {reviews.length > 0 && (
-        <section className="mt-14">
-          <SectionHeading eyebrow="Verified buyers" title="Customer Reviews" />
-          <div className="grid gap-4 md:grid-cols-2">
-            {reviews.map((r) => (
-              <article key={r.id} className="glass rounded-2xl p-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">{r.author}</h3>
-                  <RatingStars rating={r.rating} />
-                </div>
-                <p className="mt-2 text-sm text-muted-foreground">{r.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
 
       <section className="mt-14">
         <SectionHeading eyebrow="You may also like" title="Related Products" />

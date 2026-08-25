@@ -32,10 +32,13 @@ export function ProductImage({
   product,
   className,
   iconClassName,
+  view = 0,
 }: {
   product: Product;
   className?: string;
   iconClassName?: string;
+  /** Gallery angle index — shifts the neon plate for alternate product views. */
+  view?: number;
 }) {
   const Icon = categoryIcons[product.category];
   const initials = product.name
@@ -54,7 +57,7 @@ export function ProductImage({
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: `radial-gradient(120% 100% at 20% 0%, oklch(0.45 0.16 ${product.hue}) 0%, oklch(0.24 0.07 ${product.hue}) 55%, oklch(0.18 0.03 265) 100%)`,
+          backgroundImage: `radial-gradient(120% 100% at ${20 + view * 22}% ${view * 18}%, oklch(0.45 0.16 ${product.hue + view * 14}) 0%, oklch(0.24 0.07 ${product.hue + view * 14}) 55%, oklch(0.18 0.03 265) 100%)`,
         }}
       />
       <div
