@@ -18,6 +18,7 @@ import { Route as CompanyRouteImport } from './routes/company'
 import { Route as DealsRouteImport } from './routes/deals'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NewArrivalsRouteImport } from './routes/new-arrivals'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as WishlistRouteImport } from './routes/wishlist'
@@ -68,6 +69,11 @@ const NewArrivalsRoute = NewArrivalsRouteImport.update({
   path: '/new-arrivals',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/deals': typeof DealsRoute
   '/login': typeof LoginRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/register': typeof RegisterRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
   '/wishlist': typeof WishlistRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/deals': typeof DealsRoute
   '/login': typeof LoginRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/register': typeof RegisterRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
   '/wishlist': typeof WishlistRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/deals': typeof DealsRoute
   '/login': typeof LoginRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/register': typeof RegisterRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
   '/wishlist': typeof WishlistRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/deals'
     | '/login'
     | '/new-arrivals'
+    | '/register'
     | '/shop'
     | '/support'
     | '/wishlist'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/deals'
     | '/login'
     | '/new-arrivals'
+    | '/register'
     | '/shop'
     | '/support'
     | '/wishlist'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/deals'
     | '/login'
     | '/new-arrivals'
+    | '/register'
     | '/shop'
     | '/support'
     | '/wishlist'
@@ -193,6 +205,7 @@ export interface RootRouteChildren {
   DealsRoute: typeof DealsRoute
   LoginRoute: typeof LoginRoute
   NewArrivalsRoute: typeof NewArrivalsRoute
+  RegisterRoute: typeof RegisterRoute
   ShopRoute: typeof ShopRoute
   SupportRoute: typeof SupportRoute
   WishlistRoute: typeof WishlistRoute
@@ -264,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewArrivalsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
@@ -305,6 +325,7 @@ const rootRouteChildren: RootRouteChildren = {
   DealsRoute: DealsRoute,
   LoginRoute: LoginRoute,
   NewArrivalsRoute: NewArrivalsRoute,
+  RegisterRoute: RegisterRoute,
   ShopRoute: ShopRoute,
   SupportRoute: SupportRoute,
   WishlistRoute: WishlistRoute,
