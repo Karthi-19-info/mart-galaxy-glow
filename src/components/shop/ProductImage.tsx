@@ -42,7 +42,7 @@ export function ProductImage({
     .split(" ")
     .filter((w) => /^[A-Za-z0-9]/.test(w))
     .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
+    .map((w) => (w[0] ?? "").toUpperCase())
     .join("");
 
   return (

@@ -37,7 +37,7 @@ const trust = [
 
 function Home() {
   const deals = dealProducts().slice(0, 4);
-  const floats = products.slice(0, 3);
+  const floats = products.slice(0, 3) as [typeof products[number], typeof products[number], typeof products[number]];
 
   return (
     <>
@@ -58,7 +58,7 @@ function Home() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Button asChild size="lg" className="bg-gradient-brand text-primary-foreground shadow-glow hover:opacity-90">
-              <Link to="/shop">
+              <Link to="/shop" search={{}}>
                 Shop Now <ArrowRight className="size-4" />
               </Link>
             </Button>

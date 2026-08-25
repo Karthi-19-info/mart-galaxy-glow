@@ -155,7 +155,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     const isAdmin = email.trim().toLowerCase().startsWith("admin@");
     const user: AppUser = {
       email: email.trim(),
-      name: name?.trim() || (isAdmin ? "Store Admin" : email.split("@")[0].replace(/[._]/g, " ")),
+      name: name?.trim() || (isAdmin ? "Store Admin" : (email.split("@")[0] ?? "Shopper").replace(/[._]/g, " ")),
       phone: "+91 98400 00000",
       role: isAdmin ? "admin" : "customer",
     };

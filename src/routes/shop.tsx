@@ -40,12 +40,19 @@ const sortLabels: Record<SortKey, string> = {
 
 const PAGE_SIZE = 12;
 
+export type ShopSearch = {
+  q?: string | undefined;
+  category?: string | undefined;
+  sort?: SortKey | undefined;
+  page?: number | undefined;
+};
+
 export const Route = createFileRoute("/shop")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    q: typeof search.q === "string" ? search.q : undefined,
-    category: typeof search.category === "string" ? search.category : undefined,
-    sort: (typeof search.sort === "string" ? search.sort : "relevance") as SortKey,
-    page: Number(search.page) > 0 ? Number(search.page) : 1,
+  validateSearch: (search: Record<string, unknown>): ShopSearch => ({
+    q: typeof search["q"] === "string" ? search["q"] : undefined,
+    category: typeof search["category"] === "string" ? search["category"] : undefined,
+    sort: (typeof search["sort"] === "string" ? search["sort"] : "relevance") as SortKey,
+    page: Number(search["page"]) > 0 ? Number(search["page"]) : 1,
   }),
   head: () => ({
     meta: [
@@ -66,7 +73,10 @@ export const Route = createFileRoute("/shop")({
 });
 
 function ShopPage() {
-  const { q, category, sort, page } = Route.useSearch();
+  const search = Route.useSearch();
+  const { q, category } = search;
+  const sort: SortKey = search.sort ?? "relevance";
+  const page = search.page ?? 1;
   const navigate = useNavigate({ from: "/shop" });
   const [filters, setFilters] = useState<ShopFilters>({
     ...defaultFilters,
@@ -86,7 +96,7 @@ function ShopPage() {
 
   const patch = (p: Partial<ShopFilters>) => {
     setFilters((f) => ({ ...f, ...p }));
-    navigate({ search: (prev) => ({ ...prev, page: 1, category: undefined }) });
+    navigate({ search: (prev) => ({ q: prev.q, sort: prev.sort, page: 1 }) });
   };
 
   const filtered = useMemo(() => {
