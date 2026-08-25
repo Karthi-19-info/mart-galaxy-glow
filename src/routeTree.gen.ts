@@ -16,6 +16,7 @@ import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CompanyRouteImport } from './routes/company'
 import { Route as DealsRouteImport } from './routes/deals'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as NewArrivalsRouteImport } from './routes/new-arrivals'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SupportRouteImport } from './routes/support'
@@ -57,6 +58,11 @@ const DealsRoute = DealsRouteImport.update({
   path: '/deals',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewArrivalsRoute = NewArrivalsRouteImport.update({
   id: '/new-arrivals',
   path: '/new-arrivals',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/company': typeof CompanyRoute
   '/deals': typeof DealsRoute
+  '/login': typeof LoginRoute
   '/new-arrivals': typeof NewArrivalsRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/company': typeof CompanyRoute
   '/deals': typeof DealsRoute
+  '/login': typeof LoginRoute
   '/new-arrivals': typeof NewArrivalsRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/company': typeof CompanyRoute
   '/deals': typeof DealsRoute
+  '/login': typeof LoginRoute
   '/new-arrivals': typeof NewArrivalsRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/company'
     | '/deals'
+    | '/login'
     | '/new-arrivals'
     | '/shop'
     | '/support'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/company'
     | '/deals'
+    | '/login'
     | '/new-arrivals'
     | '/shop'
     | '/support'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/company'
     | '/deals'
+    | '/login'
     | '/new-arrivals'
     | '/shop'
     | '/support'
@@ -179,6 +191,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   CompanyRoute: typeof CompanyRoute
   DealsRoute: typeof DealsRoute
+  LoginRoute: typeof LoginRoute
   NewArrivalsRoute: typeof NewArrivalsRoute
   ShopRoute: typeof ShopRoute
   SupportRoute: typeof SupportRoute
@@ -237,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DealsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/new-arrivals': {
       id: '/new-arrivals'
       path: '/new-arrivals'
@@ -283,6 +303,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   CompanyRoute: CompanyRoute,
   DealsRoute: DealsRoute,
+  LoginRoute: LoginRoute,
   NewArrivalsRoute: NewArrivalsRoute,
   ShopRoute: ShopRoute,
   SupportRoute: SupportRoute,
