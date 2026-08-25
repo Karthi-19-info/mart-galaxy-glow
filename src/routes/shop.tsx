@@ -40,6 +40,13 @@ const sortLabels: Record<SortKey, string> = {
 
 const PAGE_SIZE = 12;
 
+export type ShopSearch = {
+  q?: string;
+  category?: string;
+  sort?: SortKey;
+  page?: number;
+};
+
 export const Route = createFileRoute("/shop")({
   validateSearch: (search: Record<string, unknown>): ShopSearch => ({
     q: typeof search["q"] === "string" ? search["q"] : undefined,
