@@ -73,7 +73,10 @@ export const Route = createFileRoute("/shop")({
 });
 
 function ShopPage() {
-  const { q, category, sort, page } = Route.useSearch();
+  const search = Route.useSearch();
+  const { q, category } = search;
+  const sort: SortKey = search.sort ?? "relevance";
+  const page = search.page ?? 1;
   const navigate = useNavigate({ from: "/shop" });
   const [filters, setFilters] = useState<ShopFilters>({
     ...defaultFilters,

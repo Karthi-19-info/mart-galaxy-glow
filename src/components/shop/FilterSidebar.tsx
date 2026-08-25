@@ -104,7 +104,7 @@ export function FilterSidebar({
           min={500}
           max={PRICE_CEILING}
           step={500}
-          onValueChange={([v]) => onChange({ maxPrice: v })}
+          onValueChange={([v]) => onChange({ maxPrice: v ?? PRICE_CEILING })}
           aria-label="Maximum price"
         />
         <p className="text-sm text-muted-foreground">Up to {inr(filters.maxPrice)}</p>
